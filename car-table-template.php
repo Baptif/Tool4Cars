@@ -20,6 +20,12 @@ if ($client) {
         $garagesMap[$garage['id']] = $garage['title'];
     }
 
+    echo '<style>
+            #car-table-body td {
+                cursor: pointer;
+            }
+        </style>';
+
     echo '<table class="table table-striped">';
     echo '<thead><tr>';
 
@@ -33,10 +39,10 @@ if ($client) {
         echo "<th>{$header}</th>";
     }
 
-    echo '</tr></thead><tbody>';
+    echo '</tr></thead><tbody id="car-table-body">';
 
     foreach ($filteredCars as $car) {
-        echo '<tr>';
+        echo "<tr data-car-id={$car['id']}>";
         switch ($client) {
             case 'clienta':
                 $year = date('Y', $car['year']);

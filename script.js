@@ -16,6 +16,7 @@ $(function() { // .ready() handler
             // Charge la liste des voitures
             $.get('car-table-template.php', function(data) {
                 $('.dynamic-div').append(data);
+                attachRowClickHandler();
             });
         }
     }
@@ -29,6 +30,24 @@ $(function() { // .ready() handler
             .split("; ")
             .find(row => row.startsWith(name + "="))
             ?.split("=")[1] || null;
+    }
+
+    function attachRowClickHandler() {
+        $('#car-table-body tr').on('click', function() {
+            const carID = $(this).data('car-id');
+            console.log('Row clicked, car ID:', carID);
+            $.post("edit.php", { carID: carID }, function(data) {
+                $('.dynamic-div').html(data);
+                attachBackButtonHandler();
+            });
+        });
+    }
+
+    function attachBackButtonHandler() {
+        $('#back-button').on('click', function() {
+            clearContent();
+            loadContent();
+        });
     }
 
     loadContent();
