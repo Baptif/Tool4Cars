@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() { // .ready() handler
     function loadContent() {
         const client = getCookie('client');
         if (client!==null) 
@@ -8,10 +8,20 @@ $(document).ready(function() {
 
             const url = '/customs/' + client + '/modules/' + module + '/' + script + '.php';
 
+            // Charge le titre
             $.get(url, function(data) {
-                $('.dynamic-div').html(data);
+                $('.dynamic-div').append(data);
+            });
+
+            // Charge la liste des voitures
+            $.get('car-table-template.php', function(data) {
+                $('.dynamic-div').append(data);
             });
         }
+    }
+
+    function clearContent() {
+        $('.dynamic-div').empty();
     }
 
     function getCookie(name) {
@@ -26,6 +36,7 @@ $(document).ready(function() {
     $('#client-buttons button').on('click', function() {
         const client = $(this).data('client');
         document.cookie = "client=" + client + "; Secure";
+        clearContent();
         loadContent();
     });
 });
