@@ -11,14 +11,20 @@
 <body>
 <div class="container">
     <h1 class="my-4">Tool4cars</h1>
-    <div id="client-buttons" class="btn-group mb-4">
-        <button class="btn btn-secondary" data-client="clienta">Client A</button>
-        <button type="button" class="btn btn-secondary mr-0 ml-0 pr-0 pl-0" disabled></button>
-        <button class="btn btn-secondary" data-client="clientb">Client B</button>
-        <button type="button" class="btn btn-secondary mr-0 ml-0 pr-0 pl-0" disabled></button>
-        <button class="btn btn-secondary" data-client="clientc">Client C</button>
+    <div class="d-flex justify-content-between">
+        <div id="client-buttons" class="btn-group mb-4">
+            <button class="btn btn-outline-secondary" data-client="clienta">Client A</button>
+            <button class="btn btn-outline-secondary" data-client="clientb">Client B</button>
+            <button class="btn btn-outline-secondary" data-client="clientc">Client C</button>
+        </div>
+        <div>
+            <select id="module-selector" class="form-control">
+                <option value="cars" selected>Cars</option>
+                <option value="garages">Garages</option>
+            </select>
+        </div>
     </div>
-    
+
     <div class="dynamic-div" data-module="cars" data-script="ajax"></div>
 </div>
 </body>

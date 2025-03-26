@@ -2,7 +2,7 @@
     {
       "id": 1,
       "modelName": "Sedan X",
-      "year": 1630454400,
+      "year": 1672531200,
       "brand": "Brand A",
       "power": 200,
       "customer": "clienta",
@@ -62,7 +62,7 @@
     {
       "id": 7,
       "modelName": "Sedan D",
-      "year": 1625097600,
+      "year": 1388534400,
       "brand": "Brand G",
       "power": 205,
       "customer": "clienta",

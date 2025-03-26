@@ -1,23 +1,31 @@
-$(function() { // .ready() handler
+$(function() {
+    const defaultModule = 'cars';
+
     function loadContent() {
-        const client = getCookie('client');
+        const client = getCookie("client");
         if (client!==null) 
         {
-            const module = $('.dynamic-div').data('module');
-            const script = $('.dynamic-div').data('script');
+            updateModules(client);
 
-            const url = '/customs/' + client + '/modules/' + module + '/' + script + '.php';
+            const module = $(".dynamic-div").data("module");
+            const script = $(".dynamic-div").data("script");
 
-            // Charge le titre
-            $.get(url, function(data) {
-                $('.dynamic-div').append(data);
-            });
+            const url = `includes/loader.php?module=${module}&script=${script}`;
 
-            // Charge la liste des voitures
-            $.get('car-table-template.php', function(data) {
-                $('.dynamic-div').append(data);
-                attachRowClickHandler();
-            });
+            $.get(url)
+                .done(function (data) {
+                    $(".dynamic-div").html(data);
+                    attachRowClickHandler(module);
+                })
+                .fail(function (jqXHR) {
+                    if (jqXHR.status === 403) {
+                        $(".dynamic-div").html('<div class="alert alert-danger">Accès interdit.</div>');
+                    } else if (jqXHR.status === 404) {
+                        $(".dynamic-div").html('<div class="alert alert-warning">Module introuvable.</div>');
+                    } else {
+                        $(".dynamic-div").html('<div class="alert alert-danger">Une erreur est survenue.</div>');
+                    }
+                });
         }
     }
 
@@ -32,15 +40,31 @@ $(function() { // .ready() handler
             ?.split("=")[1] || null;
     }
 
-    function attachRowClickHandler() {
-        $('#car-table-body tr').on('click', function() {
-            const carID = $(this).data('car-id');
-            console.log('Row clicked, car ID:', carID);
-            $.post("edit.php", { carID: carID }, function(data) {
-                $('.dynamic-div').html(data);
-                attachBackButtonHandler();
+    function attachRowClickHandler(module) {
+        const handlers = {
+            'cars': {
+                selector: '.car-table tbody tr',
+                dataKey: 'car-id',
+                url: 'views/cars/edit.php'
+            },
+            'garages': {
+                selector: '.garage-table tbody tr',
+                dataKey: 'garage-id',
+                url: 'views/garages/edit.php'
+            }
+        };
+
+        const handler = handlers[module];
+        if (handler) {
+            $(handler.selector).on('click', function() {
+                const id = $(this).data(handler.dataKey);
+
+                $.post(handler.url, { [handler.dataKey]: id }, function(data) {
+                    $('.dynamic-div').html(data);
+                    attachBackButtonHandler();
+                });
             });
-        });
+        }
     }
 
     function attachBackButtonHandler() {
@@ -50,11 +74,27 @@ $(function() { // .ready() handler
         });
     }
 
+    function updateModules(client) {
+        if (client === 'clientb') {
+            $('#module-selector').show();
+            const activeModule = $('#module-selector').val();
+            $(".dynamic-div").data("module", activeModule);
+        } else {
+            $('#module-selector').hide();
+            $(".dynamic-div").data("module", defaultModule);
+        }
+    }
+
     loadContent();
 
     $('#client-buttons button').on('click', function() {
         const client = $(this).data('client');
         document.cookie = "client=" + client + "; Secure";
+        clearContent();
+        loadContent();
+    });
+
+    $('#module-selector').on('change', function () {
         clearContent();
         loadContent();
     });
