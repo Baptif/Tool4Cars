@@ -1,8 +1,12 @@
 <?php
 
 $client = $_COOKIE['client'] ?? null;
-$module = $_GET['module'] ?? null;
-$script = $_GET['script'] ?? null;
+$module = filter_input(INPUT_GET, 'module', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+$script = filter_input(INPUT_GET, 'script', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+if (!$module || !$script) {
+    exit('<div class="alert alert-danger">Erreur de sécurité.</div>');
+}
 
 // Client défini -> sinon erreur
 if (!$client) {
@@ -10,17 +14,20 @@ if (!$client) {
     exit('<div class="alert alert-danger">Accès interdit.</div>');
 }
 
+// Liste blanche des modules et scripts autorisés
+$allowedModules = ['cars', 'garages'];
+$allowedScripts = ['ajax', 'edit'];
+// Module demandé existant ? -> sinon erreur
+if (!in_array($module, $allowedModules) || !in_array($script, $allowedScripts)) {
+    http_response_code(404);
+    exit('<div class="alert alert-warning">Module ou script introuvable.</div>');
+}
+
 // Fichiers JSON associés aux modules
 $modulesData = [
     'cars' => __DIR__.'/../data/cars.json',
     'garages' => __DIR__.'/../data/garages.json'
 ];
-
-// Module demandé existant ? -> sinon erreur
-if (!array_key_exists($module, $modulesData)) {
-    http_response_code(404);
-    exit('<div class="alert alert-warning">Module introuvable.</div>');
-}
 
 // Chargement des données JSON du module
 $dataArray = json_decode(file_get_contents($modulesData[$module]), true);
@@ -51,7 +58,7 @@ if ($module === 'cars' && $client === 'clientb') {
 
 // Inclusion du fichier correspondant au client et au module
 $clientFilePath = __DIR__."/../customs/$client/modules/$module/$script.php";
-if (file_exists($clientFilePath)) {
+if (file_exists($clientFilePath) && is_file($clientFilePath)) {
     include $clientFilePath;
 } else {
     exit('<div class="alert alert-danger">Fichier introuvable.</div>');

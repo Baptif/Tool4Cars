@@ -1,10 +1,9 @@
 <?php
 // Vérification qu'un ID est envoyé
-$carID = $_POST['car-id'] ?? null;
+$carID = filter_input(INPUT_POST, 'car-id', FILTER_VALIDATE_INT);
 
 if (!$carID) {
-    echo '<div class="alert alert-danger">Voiture non définie !</div>';
-    exit;
+    exit('<div class="alert alert-danger">Voiture non identifiée.</div>');
 }
 
 // Chargement et décodage des fichiers JSON

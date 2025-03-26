@@ -6,7 +6,10 @@
     <title>Tool4cars</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="script.js"></script>
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/modules.js"></script>
+    <script src="assets/js/handlers.js"></script>
+    <script src="assets/js/main.js"></script>
 </head>
 <body>
 <div class="container">
@@ -18,7 +21,7 @@
             <button class="btn btn-outline-secondary" data-client="clientc">Client C</button>
         </div>
         <div>
-            <select id="module-selector" class="form-control">
+            <select id="module-selector" class="form-control" style="display: none;">
                 <option value="cars" selected>Cars</option>
                 <option value="garages">Garages</option>
             </select>

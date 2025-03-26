@@ -1,0 +1,13 @@
+1. Données sensibles stockées en fichiers JSON :
+- Utiliser une base de données relationnelle (comme MySQL ou PostgreSQL) pour stocker les données des clients.
+- Configurer des permissions strictes pour limiter l'accès à la base de données.
+- Utiliser des requêtes préparées pour éviter les injections SQL
+
+2. Absence d'authentification et d'autorisation :
+- Créer une API REST ou GraphQL pour accéder aux données.
+- Ajouter des mécanismes d'authentification (par exemple, OAuth2, JWT) pour vérifier l'identité des utilisateurs.
+- Implémenter des contrôles d'autorisation pour restreindre l'accès aux données en fonction des permissions.
+
+3. Meilleur gestion des cookies
+- Signer et chiffrer les cookies pour empêcher leur modification.
+- Stocker les cookies côté server
